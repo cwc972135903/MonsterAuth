@@ -2,11 +2,76 @@ server:
   port: 8068
   servlet:
     context-path: /bzhi2Auth
-spring:
-  application:
-    name: bzhi2AuthService
 logging:
   config: classpath:logback-spring.xml
   file:
     # 根据线上部署的环境进行修改的
     path: D:\project\JavaProjectNew\MonsterProj\serverlog
+#配置数据源--新版旧版的druid配置可能不同
+spring:
+  application:
+    name: bzhi2AuthService
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    url: jdbc:log4jdbc:mysql://${DB_HOST:192.168.197.130}:${DB_PORT:3306}/${DB_NAME:bzhi2}?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${DB_USER:cwc}
+    password: ${DB_PWD:cwc20071212727}
+    # 初始连接数
+    initial-size: 5
+    # 最小连接数
+    min-idle: 10
+    # 最大连接数
+    max-active: 20
+    # 获取连接超时时间
+    max-wait: 5000
+    # 连接有效性检测时间
+    time-between-eviction-runs-millis: 60000
+    # 连接在池中最小生存的时间
+    min-evictable-idle-time-millis: 300000
+    # 连接在池中最大生存的时间
+    max-evictable-idle-time-millis: 900000
+    test-while-idle: true
+    test-on-borrow: false
+    test-on-return: false
+    # 检测连接是否有效
+    validation-query: select 1
+    # 配置监控统计
+    webStatFilter:
+      enabled: true
+    stat-view-servlet:
+      enabled: true
+      url-pattern: /druid/*
+      reset-enable: false
+    filter:
+      stat:
+        enabled: true
+        # 记录慢SQL
+        log-slow-sql: true
+        slow-sql-millis: 1000
+        merge-sql: true
+      wall:
+        config:
+          multi-statement-allow: true
+  redis:
+    #数据库索引
+    database: ${REDIS_DB:0}
+    host: ${REDIS_HOST:192.168.197.130}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PWD:}
+    #连接超时时间
+    timeout: 5000
+mybatis:
+  mapper-locations: classpath:mapper/**/*Mapper.xml
+  # model的包
+  type-aliases-package: com.bzhi2.monster.**.domain
+  type-handlers-package: com.bzhi2.monster.**.dao
+  configuration:
+    map-underscore-to-camel-case: true
+
+# 配置pagehelper参数
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
