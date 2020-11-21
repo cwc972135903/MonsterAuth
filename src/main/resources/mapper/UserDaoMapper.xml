@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace="cn.hs.dao.UserDao"==>接口的全限定类名-->
+<mapper namespace="com.bzhi2.monster.auth.dao.UserDao">
+    <!--配置查询所有-->
+    <!--findAll==>不能随便写，要和你接口中的方法名称相对应-->
+    <!--resultType="cn.hs.daomain.User"==》指返回值类型-->
+    <select id="findUserListByName" resultType="com.bzhi2.monster.auth.entity.dto.UserDto">
+        SELECT * from sys_user
+        <where>
+            <if test="userName != '' and userName != null">
+                 username like concat('%',#{userName},'%')
+            </if>
+        </where>
+    </select>
+</mapper>
